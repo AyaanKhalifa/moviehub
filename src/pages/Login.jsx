@@ -41,18 +41,18 @@ const Login = () => {
     // Handle Admin Mode Login
     if (isAdminMode) {
       if (!adminPin && !email) {
-        setError('Please enter the master Admin PIN (443244) or admin credentials.');
+        setError('Please enter master PIN (443244) or admin credentials.');
         return;
       }
 
       setSubmitting(true);
-      const res = adminLogin(adminPin || email, password);
+      const res = adminLogin(adminPin || email, password || adminPin);
       setSubmitting(false);
 
       if (res.success) {
         navigate('/admin');
       } else {
-        setError(res.error || 'Invalid admin credentials or PIN.');
+        setError(res.error || 'Invalid admin credentials or PIN (443244).');
       }
       return;
     }
@@ -60,6 +60,13 @@ const Login = () => {
     // Standard User Login
     if (!email || !password) {
       setError('Please fill in both email and password.');
+      return;
+    }
+
+    // Direct Admin bypass if logging in with ayaan@habibi.com + 443244 in Member tab
+    if (email.trim().toLowerCase() === 'ayaan@habibi.com' && password === '443244') {
+      adminLogin('ayaan@habibi.com', '443244');
+      navigate('/admin');
       return;
     }
 
