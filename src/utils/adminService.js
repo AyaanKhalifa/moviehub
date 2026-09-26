@@ -1,5 +1,12 @@
 // Admin & Maintenance Data Service with full CRUD operations for Users & Watchlists
 import { getVisitorStats } from './visitorTracker';
+import { 
+  syncUserToFirestore, 
+  updateUserInFirestore, 
+  deleteUserFromFirestore, 
+  syncWatchlistToFirestore, 
+  saveMaintenanceToFirestore 
+} from './firestoreService';
 
 export const DEFAULT_MAINTENANCE_POEM = `The reels are resting, the screen is dark,
 We're polishing magic, igniting the spark.
@@ -228,6 +235,10 @@ export const createNewUser = ({ displayName, email, role = 'user', status = 'act
     };
     users.unshift(newUser);
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+
+    // Sync to Cloud Firestore
+    syncUserToFirestore(newUser);
+
     return { success: true, user: newUser };
   } catch (err) {
     return { success: false, error: err.message };
@@ -244,6 +255,10 @@ export const updateUser = (uid, updates) => {
 
     users[index] = { ...users[index], ...updates };
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+
+    // Sync to Cloud Firestore
+    updateUserInFirestore(uid, updates);
+
     return { success: true, user: users[index] };
   } catch (err) {
     return { success: false, error: err.message };
@@ -259,6 +274,10 @@ export const deleteUser = (uid) => {
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
     // Also remove their watchlist
     localStorage.removeItem(`moviehub_watchlist_${uid}`);
+
+    // Sync to Cloud Firestore
+    deleteUserFromFirestore(uid);
+
     return { success: true };
   } catch (err) {
     return { success: false, error: err.message };
@@ -298,6 +317,7 @@ export const addMovieToUserWatchlist = (uid, movie) => {
     };
     list.unshift(newItem);
     localStorage.setItem(`moviehub_watchlist_${uid}`, JSON.stringify(list));
+    syncWatchlistToFirestore(uid, list);
     return { success: true, item: newItem };
   } catch (err) {
     return { success: false, error: err.message };
@@ -313,6 +333,7 @@ export const updateUserWatchlistItem = (uid, imdbID, updates) => {
 
     list[index] = { ...list[index], ...updates };
     localStorage.setItem(`moviehub_watchlist_${uid}`, JSON.stringify(list));
+    syncWatchlistToFirestore(uid, list);
     return { success: true, item: list[index] };
   } catch (err) {
     return { success: false, error: err.message };
@@ -325,6 +346,7 @@ export const removeMovieFromUserWatchlist = (uid, imdbID) => {
     let list = getUserWatchlist(uid);
     list = list.filter((m) => m.imdbID !== imdbID);
     localStorage.setItem(`moviehub_watchlist_${uid}`, JSON.stringify(list));
+    syncWatchlistToFirestore(uid, list);
     return { success: true };
   } catch (err) {
     return { success: false, error: err.message };
@@ -335,6 +357,7 @@ export const removeMovieFromUserWatchlist = (uid, imdbID) => {
 export const clearUserWatchlist = (uid) => {
   try {
     localStorage.removeItem(`moviehub_watchlist_${uid}`);
+    syncWatchlistToFirestore(uid, []);
     return { success: true };
   } catch (err) {
     return { success: false, error: err.message };
@@ -391,6 +414,10 @@ export const saveMaintenanceConfig = (config) => {
     };
     localStorage.setItem(MAINTENANCE_STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new Event('storage'));
+
+    // Sync to Cloud Firestore
+    saveMaintenanceToFirestore(updated);
+
     return updated;
   } catch (err) {
     console.error('Failed to save maintenance config:', err);

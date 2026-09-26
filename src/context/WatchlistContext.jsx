@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { syncWatchlistToFirestore, fetchWatchlistFromFirestore } from '../utils/firestoreService';
 
 const WatchlistContext = createContext();
 
@@ -16,21 +17,37 @@ export const WatchlistProvider = ({ children }) => {
     }
   });
 
-  // Reload watchlist when user logs in / changes
+  // Reload watchlist when user logs in & fetch from Firestore
   useEffect(() => {
-    try {
+    let isMounted = true;
+    const loadWatchlist = async () => {
       if (currentUser) {
-        const userSaved = localStorage.getItem(`moviehub_watchlist_${currentUser.uid}`);
-        setWatchlist(userSaved ? JSON.parse(userSaved) : []);
+        // First load from local storage for instant response
+        try {
+          const userSaved = localStorage.getItem(`moviehub_watchlist_${currentUser.uid}`);
+          if (userSaved && isMounted) {
+            setWatchlist(JSON.parse(userSaved));
+          }
+        } catch {}
+
+        // Then fetch remote from Firestore
+        const remoteList = await fetchWatchlistFromFirestore(currentUser.uid);
+        if (remoteList && remoteList.length > 0 && isMounted) {
+          setWatchlist(remoteList);
+          try {
+            localStorage.setItem(`moviehub_watchlist_${currentUser.uid}`, JSON.stringify(remoteList));
+          } catch {}
+        }
       } else {
-        setWatchlist([]);
+        if (isMounted) setWatchlist([]);
       }
-    } catch {
-      setWatchlist([]);
-    }
+    };
+
+    loadWatchlist();
+    return () => { isMounted = false; };
   }, [currentUser]);
 
-  // Persist watchlist whenever it changes
+  // Persist watchlist whenever it changes to both localStorage and Firestore
   useEffect(() => {
     if (currentUser) {
       try {
@@ -38,6 +55,8 @@ export const WatchlistProvider = ({ children }) => {
       } catch (e) {
         console.error('Failed to save watchlist to localStorage', e);
       }
+      // Sync to Cloud Firestore
+      syncWatchlistToFirestore(currentUser.uid, watchlist);
     }
   }, [watchlist, currentUser]);
 

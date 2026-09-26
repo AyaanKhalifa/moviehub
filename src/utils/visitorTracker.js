@@ -1,4 +1,5 @@
 // Visitor Tracker Service - Tracks total site visitors, unique visits, and page views (with or without login)
+import { recordVisitorToFirestore } from './firestoreService';
 
 const VISITOR_STORAGE_KEY = 'moviehub_visitor_metrics';
 const SESSION_STORAGE_KEY = 'moviehub_session_recorded';
@@ -22,6 +23,7 @@ export const initVisitorTracker = () => {
       metrics.lastDate = todayStr;
     }
 
+    let isNewVisitor = false;
     // Check if new session
     const isSessionRecorded = sessionStorage.getItem(SESSION_STORAGE_KEY);
     if (!isSessionRecorded) {
@@ -29,12 +31,17 @@ export const initVisitorTracker = () => {
       metrics.todayVisits += 1;
       metrics.uniqueVisitors += 1;
       sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
+      isNewVisitor = true;
     }
 
     // Always increment page view
     metrics.totalPageViews += 1;
 
     localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify(metrics));
+
+    // Async record to Cloud Firestore database
+    recordVisitorToFirestore(isNewVisitor);
+
     return metrics;
   } catch (err) {
     console.warn('Visitor tracker fallback:', err);

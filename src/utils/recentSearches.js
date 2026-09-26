@@ -1,4 +1,6 @@
-// Utility to manage recent searches in localStorage
+// Utility to manage recent searches in localStorage and sync with Firestore
+import { syncRecentSearchesToFirestore, fetchRecentSearchesFromFirestore } from './firestoreService';
+import { auth } from '../firebase';
 
 const STORAGE_KEY = 'moviehub_recent_searches';
 const MAX_SEARCHES = 8;
@@ -24,6 +26,11 @@ export const addRecentSearch = (query) => {
       MAX_SEARCHES
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+    // Sync to Firestore if user logged in
+    if (auth.currentUser?.uid) {
+      syncRecentSearchesToFirestore(auth.currentUser.uid, updated);
+    }
     return updated;
   } catch {
     return [];
@@ -35,6 +42,9 @@ export const removeRecentSearch = (query) => {
     const current = getRecentSearches();
     const updated = current.filter((item) => item.toLowerCase() !== query.toLowerCase());
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    if (auth.currentUser?.uid) {
+      syncRecentSearchesToFirestore(auth.currentUser.uid, updated);
+    }
     return updated;
   } catch {
     return [];
@@ -44,8 +54,12 @@ export const removeRecentSearch = (query) => {
 export const clearRecentSearches = () => {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    if (auth.currentUser?.uid) {
+      syncRecentSearchesToFirestore(auth.currentUser.uid, []);
+    }
   } catch {
     // Ignore
   }
   return [];
 };
+

@@ -10,6 +10,19 @@ import {
   updateProfile,
   onAuthStateChanged
 } from 'firebase/auth';
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+  increment,
+  serverTimestamp
+} from 'firebase/firestore';
 
 // User's Firebase Configuration
 const firebaseConfig = {
@@ -25,8 +38,10 @@ const firebaseConfig = {
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication
+// Initialize Firebase Authentication & Cloud Firestore Database
 export const auth = getAuth(app);
+export const db = getFirestore(app);
+
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
@@ -60,5 +75,17 @@ export const updateUserDisplayName = (displayName) => {
   return updateProfile(auth.currentUser, { displayName });
 };
 
-export { onAuthStateChanged };
+export { 
+  onAuthStateChanged,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+  increment,
+  serverTimestamp
+};
 export default app;
