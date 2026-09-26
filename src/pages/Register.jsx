@@ -22,6 +22,9 @@ const Register = () => {
 
   const formatFirebaseError = (err) => {
     const msg = err.code || err.message || '';
+    if (msg.includes('unauthorized-domain')) {
+      return 'Domain unauthorized: Please add "moviehub-peach.vercel.app" to Firebase Console > Authentication > Settings > Authorized domains.';
+    }
     if (msg.includes('email-already-in-use')) {
       return 'An account already exists with this email address. Please sign in instead.';
     }

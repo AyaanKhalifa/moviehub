@@ -20,6 +20,9 @@ const Login = () => {
 
   const formatFirebaseError = (err) => {
     const msg = err.code || err.message || '';
+    if (msg.includes('unauthorized-domain')) {
+      return 'Domain unauthorized: Please add "moviehub-peach.vercel.app" to Firebase Console > Authentication > Settings > Authorized domains.';
+    }
     if (msg.includes('user-not-found') || msg.includes('wrong-password') || msg.includes('invalid-credential')) {
       return 'Invalid email or password. Please try again.';
     }
