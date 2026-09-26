@@ -15,10 +15,11 @@ import {
   removeMovieFromUserWatchlist,
   clearUserWatchlist
 } from '../utils/adminService';
-import { initVisitorTracker, getVisitorStats } from '../utils/visitorTracker';
+import { initVisitorTracker, getVisitorStats, cacheVisitorStats } from '../utils/visitorTracker';
 import { 
   subscribeToVisitorStatsFromFirestore,
-  subscribeToMaintenanceFromFirestore 
+  subscribeToMaintenanceFromFirestore,
+  fetchMaintenanceFromFirestore
 } from '../utils/firestoreService';
 import { useAuth } from './AuthContext';
 
@@ -39,34 +40,42 @@ export const AdminProvider = ({ children }) => {
   const [visitorStats, setVisitorStats] = useState(() => getVisitorStats());
   const [usersData, setUsersData] = useState(() => getAllUsersWithWatchlists());
 
-  // Initialize storage and visitor metrics on mount
+  // Initialize on mount: track visitor + subscribe to Firestore real-time streams
   useEffect(() => {
     initAdminStorage();
-    const stats = initVisitorTracker();
-    setVisitorStats(stats);
+    initVisitorTracker(); // Record this visit to Firestore (non-blocking)
     setUsersData(getAllUsersWithWatchlists());
 
-    // Subscribe to real-time Firestore visitor stats
-    const unsubscribeVisitors = subscribeToVisitorStatsFromFirestore((firestoreStats) => {
-      // Merge Firestore data with local (prefer Firestore counts as source of truth)
-      setVisitorStats((prev) => ({
-        ...prev,
-        ...firestoreStats
-      }));
+    // --- Fetch maintenance config from Firestore immediately on first load ---
+    fetchMaintenanceFromFirestore().then((firestoreConfig) => {
+      if (firestoreConfig) {
+        setMaintenanceConfig((prev) => ({ ...prev, ...firestoreConfig }));
+        // Also update localStorage so offline works
+        saveMaintenanceConfig(firestoreConfig);
+      }
     });
 
-    // Subscribe to real-time Firestore maintenance config
+    // --- Real-time Firestore subscription: visitor stats ---
+    const unsubscribeVisitors = subscribeToVisitorStatsFromFirestore((firestoreStats) => {
+      setVisitorStats(firestoreStats);       // Update React state (admin dashboard)
+      cacheVisitorStats(firestoreStats);     // Persist for offline/reload
+    });
+
+    // --- Real-time Firestore subscription: maintenance mode ---
+    // This ensures ALL browsers/devices see maintenance toggle instantly
     const unsubscribeMaintenance = subscribeToMaintenanceFromFirestore((firestoreConfig) => {
-      setMaintenanceConfig((prev) => ({
-        ...prev,
-        ...firestoreConfig
-      }));
+      setMaintenanceConfig(firestoreConfig);
+      // Sync to localStorage as fallback
+      try {
+        localStorage.setItem('moviehub_maintenance_config', JSON.stringify(firestoreConfig));
+      } catch {}
     });
 
     return () => {
       unsubscribeVisitors();
       unsubscribeMaintenance();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync user activity when logged in
@@ -81,27 +90,19 @@ export const AdminProvider = ({ children }) => {
     }
   }, [currentUser]);
 
-  // Listen to cross-tab / storage updates
+  // Listen to cross-tab localStorage changes (admin toggle on another tab, etc.)
   useEffect(() => {
     const handleStorageChange = () => {
-      setMaintenanceConfig(getMaintenanceConfig());
       setIsAdmin(verifyAdminSession());
-      setVisitorStats(getVisitorStats());
       setUsersData(getAllUsersWithWatchlists());
     };
 
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('visitor_update', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('visitor_update', handleStorageChange);
-    };
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const refreshData = () => {
     setUsersData(getAllUsersWithWatchlists());
-    setVisitorStats(getVisitorStats());
-    setMaintenanceConfig(getMaintenanceConfig());
   };
 
   const adminLogin = (emailOrPin, password) => {

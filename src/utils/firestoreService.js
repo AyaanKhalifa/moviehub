@@ -64,7 +64,7 @@ export const fetchUsersFromFirestore = async () => {
     const usersCol = collection(db, COLLECTIONS.USERS);
     const snap = await getDocs(usersCol);
     if (!snap.empty) {
-      return snap.docs.map((doc) => doc.data());
+      return snap.docs.map((d) => d.data());
     }
   } catch (err) {
     console.warn('Firestore fetchUsers fallback:', err.message);
@@ -163,32 +163,50 @@ export const fetchRecentSearchesFromFirestore = async (uid) => {
 };
 
 // ==========================================
-// 4. SITE METRICS / VISITOR COUNT (Firestore)
+// 4. SITE METRICS / REAL VISITOR COUNT (Firestore)
+//    - Globally shared across all users/devices
+//    - todayVisits resets automatically by date key
 // ==========================================
 
-export const recordVisitorToFirestore = async (isNewVisitor = false) => {
+const getTodayKey = () => new Date().toISOString().split('T')[0]; // e.g. "2026-09-26"
+
+export const recordVisitorToFirestore = async (isNewSession = false) => {
   try {
     const metricsRef = doc(db, COLLECTIONS.SITE_METRICS, 'traffic');
+    const today = getTodayKey();
     const snap = await getDoc(metricsRef);
 
     if (!snap.exists()) {
+      // First ever visitor — create the document
       await setDoc(metricsRef, {
         totalVisits: 1,
         uniqueVisitors: 1,
         todayVisits: 1,
+        todayKey: today,
         totalPageViews: 1,
         lastUpdated: serverTimestamp()
       });
     } else {
+      const data = snap.data();
       const updates = {
         totalPageViews: increment(1),
         lastUpdated: serverTimestamp()
       };
-      if (isNewVisitor) {
-        updates.totalVisits = increment(1);
+
+      // Reset todayVisits if date has changed
+      if (data.todayKey !== today) {
+        updates.todayVisits = 1;
+        updates.todayKey = today;
+      } else if (isNewSession) {
         updates.todayVisits = increment(1);
+      }
+
+      // New session = new unique visit
+      if (isNewSession) {
+        updates.totalVisits = increment(1);
         updates.uniqueVisitors = increment(1);
       }
+
       await updateDoc(metricsRef, updates);
     }
   } catch (err) {
@@ -199,13 +217,24 @@ export const recordVisitorToFirestore = async (isNewVisitor = false) => {
 export const subscribeToVisitorStatsFromFirestore = (callback) => {
   try {
     const metricsRef = doc(db, COLLECTIONS.SITE_METRICS, 'traffic');
-    return onSnapshot(metricsRef, (docSnap) => {
-      if (docSnap.exists()) {
-        callback(docSnap.data());
+    const unsubscribe = onSnapshot(
+      metricsRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          callback({
+            totalVisits: data.totalVisits || 0,
+            uniqueVisitors: data.uniqueVisitors || 0,
+            todayVisits: data.todayVisits || 0,
+            totalPageViews: data.totalPageViews || 0
+          });
+        }
+      },
+      (err) => {
+        console.warn('Firestore visitor subscription fallback:', err.message);
       }
-    }, (err) => {
-      console.warn('Firestore visitor subscription fallback:', err.message);
-    });
+    );
+    return unsubscribe;
   } catch {
     return () => {};
   }
@@ -213,15 +242,24 @@ export const subscribeToVisitorStatsFromFirestore = (callback) => {
 
 // ==========================================
 // 5. SYSTEM CONFIG / MAINTENANCE MODE (Firestore)
+//    - Fully connected: changes broadcast to all visitors in real-time
 // ==========================================
 
 export const saveMaintenanceToFirestore = async (config) => {
   try {
     const configRef = doc(db, COLLECTIONS.SYSTEM_CONFIG, 'maintenance');
-    await setDoc(configRef, {
-      ...config,
+    // Strip serverTimestamp-incompatible fields, build clean object
+    const toSave = {
+      isActive: Boolean(config.isActive),
+      title: config.title || '',
+      message: config.message || '',
+      poem: config.poem || '',
+      eta: config.eta || '',
+      pastConditions: config.pastConditions || '',
       updatedAt: serverTimestamp()
-    }, { merge: true });
+    };
+    // setDoc with merge:false so we replace the whole doc cleanly
+    await setDoc(configRef, toSave);
     return { success: true };
   } catch (err) {
     console.warn('Firestore saveMaintenance warning:', err.message);
@@ -229,16 +267,44 @@ export const saveMaintenanceToFirestore = async (config) => {
   }
 };
 
+export const fetchMaintenanceFromFirestore = async () => {
+  try {
+    const configRef = doc(db, COLLECTIONS.SYSTEM_CONFIG, 'maintenance');
+    const snap = await getDoc(configRef);
+    if (snap.exists()) {
+      return snap.data();
+    }
+  } catch (err) {
+    console.warn('Firestore fetchMaintenance warning:', err.message);
+  }
+  return null;
+};
+
 export const subscribeToMaintenanceFromFirestore = (callback) => {
   try {
     const configRef = doc(db, COLLECTIONS.SYSTEM_CONFIG, 'maintenance');
-    return onSnapshot(configRef, (docSnap) => {
-      if (docSnap.exists()) {
-        callback(docSnap.data());
+    const unsubscribe = onSnapshot(
+      configRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          // Normalize: strip Firestore Timestamp objects before passing to React state
+          callback({
+            isActive: Boolean(data.isActive),
+            title: data.title || '',
+            message: data.message || '',
+            poem: data.poem || '',
+            eta: data.eta || '',
+            pastConditions: data.pastConditions || '',
+            updatedAt: data.updatedAt?.toDate?.()?.toISOString?.() || new Date().toISOString()
+          });
+        }
+      },
+      (err) => {
+        console.warn('Firestore maintenance subscription fallback:', err.message);
       }
-    }, (err) => {
-      console.warn('Firestore maintenance subscription fallback:', err.message);
-    });
+    );
+    return unsubscribe;
   } catch {
     return () => {};
   }

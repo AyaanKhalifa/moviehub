@@ -1,79 +1,70 @@
-// Real-Time Visitor & Traffic Tracking Service
-import { recordVisitorToFirestore, subscribeToVisitorStatsFromFirestore } from './firestoreService';
+// Real Visitor Tracking — Firestore is primary source of truth
+// localStorage is used only to avoid double-counting the same browser session
+import { recordVisitorToFirestore } from './firestoreService';
 
-const VISITOR_STORAGE_KEY = 'moviehub_real_visitor_metrics';
-const SESSION_STORAGE_KEY = 'moviehub_active_session_id';
+const SESSION_KEY = 'moviehub_session_counted';  // sessionStorage: cleared on tab close
+const LOCAL_STATS_KEY = 'moviehub_last_known_stats'; // localStorage: last Firestore snapshot
 
+/**
+ * Called once on app mount.
+ * Records a real visit to Firestore (increments global counters).
+ * Uses sessionStorage to ensure each browser tab-session is counted only once.
+ */
 export const initVisitorTracker = () => {
   try {
-    const raw = localStorage.getItem(VISITOR_STORAGE_KEY);
-    const todayStr = new Date().toISOString().split('T')[0];
+    const isNewSession = !sessionStorage.getItem(SESSION_KEY);
 
-    let metrics = raw ? JSON.parse(raw) : {
-      totalVisits: 1,
-      uniqueVisitors: 1,
-      todayVisits: 1,
-      totalPageViews: 1,
-      lastDate: todayStr
-    };
-
-    // Reset todayVisits if it's a new date
-    if (metrics.lastDate !== todayStr) {
-      metrics.todayVisits = 1;
-      metrics.lastDate = todayStr;
+    if (isNewSession) {
+      sessionStorage.setItem(SESSION_KEY, '1');
     }
 
-    let isNewVisitor = false;
-    const isSessionRecorded = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (!isSessionRecorded) {
-      metrics.totalVisits = (metrics.totalVisits || 0) + 1;
-      metrics.todayVisits = (metrics.todayVisits || 0) + 1;
-      metrics.uniqueVisitors = (metrics.uniqueVisitors || 0) + 1;
-      sessionStorage.setItem(SESSION_STORAGE_KEY, `session-${Date.now()}`);
-      isNewVisitor = true;
-    }
+    // Fire to Firestore (async — non-blocking)
+    recordVisitorToFirestore(isNewSession);
 
-    metrics.totalPageViews = (metrics.totalPageViews || 0) + 1;
-
-    localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify(metrics));
-
-    // Record to Firebase Firestore
-    recordVisitorToFirestore(isNewVisitor);
-
-    return metrics;
+    // Return last known stats from localStorage as immediate placeholder
+    return getVisitorStats();
   } catch (err) {
-    console.warn('Visitor tracker fallback:', err);
-    return {
-      totalVisits: 1,
-      uniqueVisitors: 1,
-      todayVisits: 1,
-      totalPageViews: 1
-    };
+    console.warn('Visitor tracker init error:', err);
+    return getVisitorStats();
   }
 };
 
+/**
+ * Record a page view (non-session increment).
+ * Fires a +1 to totalPageViews in Firestore.
+ */
+export const recordPageView = () => {
+  try {
+    recordVisitorToFirestore(false); // page view only — not a new session
+  } catch (err) {
+    console.warn('recordPageView error:', err);
+  }
+};
+
+/**
+ * Returns last-known visitor stats saved from the Firestore subscription.
+ * AdminContext updates this whenever Firestore fires a new snapshot.
+ */
 export const getVisitorStats = () => {
   try {
-    const raw = localStorage.getItem(VISITOR_STORAGE_KEY);
+    const raw = localStorage.getItem(LOCAL_STATS_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
+  // Placeholder before Firestore data arrives
   return {
-    totalVisits: 1,
-    uniqueVisitors: 1,
-    todayVisits: 1,
-    totalPageViews: 1
+    totalVisits: '—',
+    uniqueVisitors: '—',
+    todayVisits: '—',
+    totalPageViews: '—'
   };
 };
 
-export const recordPageView = () => {
+/**
+ * Called by AdminContext when Firestore sends a new snapshot.
+ * Persists the real stats locally so they survive page refreshes.
+ */
+export const cacheVisitorStats = (stats) => {
   try {
-    const stats = getVisitorStats();
-    stats.totalPageViews = (stats.totalPageViews || 0) + 1;
-    localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify(stats));
-    window.dispatchEvent(new Event('visitor_update'));
-    recordVisitorToFirestore(false);
-    return stats;
-  } catch {
-    return getVisitorStats();
-  }
+    localStorage.setItem(LOCAL_STATS_KEY, JSON.stringify(stats));
+  } catch {}
 };

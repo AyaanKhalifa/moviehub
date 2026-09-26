@@ -77,6 +77,10 @@ const MaintenanceScreen = () => {
               ))}
             </div>
             <div className="poem-quote-mark bottom">&rdquo;</div>
+            {/* Poet Byline */}
+            <div className="poem-author-byline">
+              &mdash; <span className="poem-author-name">Ayaan Khalifa</span>
+            </div>
           </div>
 
           {/* Past Conditions & System Upgrade History */}
@@ -143,7 +147,7 @@ const MaintenanceScreen = () => {
             </div>
 
             <p className="admin-modal-desc">
-              Enter admin master PIN (<strong>443244</strong>) or password to manage maintenance mode.
+              Enter your admin credentials or master PIN to access the control panel.
             </p>
 
             {adminError && <div className="admin-modal-error">{adminError}</div>}

@@ -233,6 +233,27 @@
   height: 10px;
 }
 
+/* Poet Author Byline */
+.poem-author-byline {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(245, 197, 24, 0.15);
+  text-align: right;
+  font-size: 13.5px;
+  color: rgba(245, 197, 24, 0.7);
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+.poem-author-name {
+  color: #f5c518;
+  font-weight: 700;
+  font-style: normal;
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(245, 197, 24, 0.4);
+}
+
 /* Past Conditions & System Upgrade History */
 .maintenance-past-conditions-card {
   background: #0d0d0d;
