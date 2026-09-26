@@ -358,6 +358,62 @@
   text-decoration: underline;
 }
 
+/* Admin Shortcut Card on Profile */
+.profile-admin-shortcut-card {
+  margin-top: 1.5rem;
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(245, 197, 24, 0.25);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-shortcut-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gold-shield-icon {
+  color: #f5c518;
+}
+
+.admin-shortcut-info h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.2rem 0;
+}
+
+.admin-shortcut-info p {
+  font-size: 0.82rem;
+  color: #888888;
+  margin: 0;
+}
+
+.admin-shortcut-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f5c518;
+  color: #000000;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.admin-shortcut-btn:hover {
+  background: #e5b515;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
   .profile-hero-card {
     flex-direction: column;

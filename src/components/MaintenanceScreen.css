@@ -1,0 +1,387 @@
+/* Full Screen Maintenance Screen */
+.maintenance-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #141414 0%, #050505 70%, #000000 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+  color: #ffffff;
+}
+
+/* Ambient lighting */
+.maintenance-ambient-glow {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(245, 197, 24, 0.12) 0%, rgba(245, 197, 24, 0) 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Background animated reels */
+.maintenance-reel-bg {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  border: 1px dashed rgba(245, 197, 24, 0.08);
+  pointer-events: none;
+  z-index: 1;
+  animation: rotateReel 40s linear infinite;
+}
+
+.left-reel {
+  top: -100px;
+  left: -100px;
+}
+
+.right-reel {
+  bottom: -100px;
+  right: -100px;
+  animation-direction: reverse;
+}
+
+@keyframes rotateReel {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.maintenance-container {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+}
+
+/* Brand */
+.maintenance-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.maintenance-badge {
+  width: 44px;
+  height: 44px;
+  background: #000000;
+  border: 1.5px solid #f5c518;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5c518;
+  box-shadow: 0 0 20px rgba(245, 197, 24, 0.25);
+}
+
+.maintenance-brand-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+/* Status Pill */
+.maintenance-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 197, 24, 0.08);
+  border: 1px solid rgba(245, 197, 24, 0.25);
+  color: #f5c518;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 24px;
+  letter-spacing: 0.3px;
+}
+
+.status-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f5c518;
+  box-shadow: 0 0 10px #f5c518;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.5;
+  }
+}
+
+/* Maintenance Card */
+.maintenance-card {
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(245, 197, 24, 0.25);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 197, 24, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  width: 100%;
+  position: relative;
+}
+
+.card-top-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.sparkle-gold {
+  color: #f5c518;
+  filter: drop-shadow(0 0 8px rgba(245, 197, 24, 0.6));
+}
+
+.maintenance-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+/* Poem Box */
+.maintenance-poem-box {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin-bottom: 24px;
+}
+
+.poem-quote-mark {
+  font-size: 40px;
+  line-height: 1;
+  font-family: Georgia, serif;
+  color: rgba(245, 197, 24, 0.4);
+  position: absolute;
+}
+
+.poem-quote-mark.top {
+  top: 8px;
+  left: 14px;
+}
+
+.poem-quote-mark.bottom {
+  bottom: 0;
+  right: 14px;
+}
+
+.poem-verses {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.poem-line {
+  font-size: 16px;
+  line-height: 1.6;
+  font-style: italic;
+  font-family: 'Playfair Display', Georgia, Cambria, serif;
+  color: #f0e6d2;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+.poem-break {
+  height: 10px;
+}
+
+.maintenance-footer-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #aaaaaa;
+  margin-bottom: 16px;
+}
+
+.info-icon {
+  color: #f5c518;
+}
+
+.maintenance-signature {
+  font-size: 12px;
+  color: #777777;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 16px;
+}
+
+.maintenance-signature strong {
+  color: #f5c518;
+}
+
+/* Admin Bypass Button */
+.admin-bypass-btn {
+  margin-top: 24px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #888888;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-bypass-btn:hover {
+  border-color: #f5c518;
+  color: #f5c518;
+  background: rgba(245, 197, 24, 0.08);
+}
+
+/* Modal */
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.admin-modal-card {
+  background: #161616;
+  border: 1px solid rgba(245, 197, 24, 0.4);
+  border-radius: 18px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+}
+
+.admin-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.admin-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-lock-icon {
+  color: #f5c518;
+}
+
+.admin-modal-title h3 {
+  font-size: 17px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.admin-modal-close {
+  background: transparent;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+}
+
+.admin-modal-desc {
+  font-size: 13px;
+  color: #999999;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.admin-modal-desc strong {
+  color: #f5c518;
+}
+
+.admin-modal-error {
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  color: #ff5252;
+  font-size: 12.5px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.admin-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-pin-input {
+  background: #0d0d0d;
+  border: 1px solid #333333;
+  color: #ffffff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.admin-pin-input:focus {
+  border-color: #f5c518;
+  outline: none;
+}
+
+.admin-unlock-btn {
+  background: #f5c518;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-unlock-btn:hover {
+  background: #e5b515;
+}
+
+@media (max-width: 600px) {
+  .maintenance-card {
+    padding: 24px 18px;
+  }
+  .maintenance-title {
+    font-size: 21px;
+  }
+  .poem-line {
+    font-size: 14.5px;
+  }
+}

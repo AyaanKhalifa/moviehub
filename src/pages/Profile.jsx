@@ -205,6 +205,21 @@ const Profile = () => {
           </Link>
         </div>
       </div>
+
+      {/* Admin Portal Quick Access */}
+      <div className="profile-admin-shortcut-card">
+        <div className="admin-shortcut-info">
+          <ShieldCheck size={20} className="gold-shield-icon" />
+          <div>
+            <h4>Admin Command Center</h4>
+            <p>Manage Maintenance Mode, Registered Users, and All User Watchlists.</p>
+          </div>
+        </div>
+        <Link to="/admin" className="admin-shortcut-btn">
+          <span>Open Admin Portal</span>
+          <ArrowRight size={15} />
+        </Link>
+      </div>
     </div>
   );
 };
