@@ -16,7 +16,7 @@ const USERS_STORAGE_KEY = 'moviehub_registered_users';
 const INITIAL_USERS = [
   {
     uid: 'admin-001',
-    email: 'admin@moviehub.com',
+    email: 'ayaan@habibi.com',
     displayName: 'Ayaan Khalifa (Admin)',
     role: 'admin',
     createdAt: '2026-01-15T10:00:00.000Z',
@@ -175,6 +175,7 @@ export const recordUserActivity = (user) => {
         ...users[existingIndex],
         displayName: user.displayName || users[existingIndex].displayName || 'MovieHub Fan',
         email: user.email || users[existingIndex].email,
+        role: (user.email === 'ayaan@habibi.com' || users[existingIndex].role === 'admin') ? 'admin' : 'user',
         lastLogin: now
       };
     } else {
@@ -182,7 +183,7 @@ export const recordUserActivity = (user) => {
         uid: user.uid,
         email: user.email || 'guest@moviehub.com',
         displayName: user.displayName || 'MovieHub Fan',
-        role: user.email === 'admin@moviehub.com' ? 'admin' : 'user',
+        role: user.email === 'ayaan@habibi.com' ? 'admin' : 'user',
         createdAt: now,
         lastLogin: now,
         status: 'active'

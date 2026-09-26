@@ -33,7 +33,7 @@ export const AdminProvider = ({ children }) => {
   useEffect(() => {
     if (currentUser) {
       recordUserActivity(currentUser);
-      if (currentUser.email === 'admin@moviehub.com') {
+      if (currentUser.email === 'ayaan@habibi.com') {
         setIsAdmin(true);
         setAdminSession(true);
       }
@@ -52,18 +52,18 @@ export const AdminProvider = ({ children }) => {
   }, []);
 
   const adminLogin = (emailOrPin, password) => {
-    // Admin credentials check: either PIN 7777 / admin123 or email admin@moviehub.com + password
-    const isPinMatch = emailOrPin === '7777' || emailOrPin === 'admin123';
+    // Admin credentials check: master PIN 443244 or email ayaan@habibi.com + password 443244
+    const isPinMatch = emailOrPin === '443244';
     const isCredentialsMatch = 
-      (emailOrPin === 'admin@moviehub.com' || emailOrPin === 'admin') && 
-      (password === 'admin123' || password === 'admin' || password === '7777' || !password);
+      (emailOrPin === 'ayaan@habibi.com' || emailOrPin === 'ayaan' || emailOrPin === 'admin') && 
+      (password === '443244' || !password);
 
     if (isPinMatch || isCredentialsMatch) {
       setIsAdmin(true);
       setAdminSession(true);
       return { success: true };
     }
-    return { success: false, error: 'Invalid admin credentials or PIN.' };
+    return { success: false, error: 'Invalid admin credentials or PIN. Use PIN: 443244' };
   };
 
   const adminLogout = () => {

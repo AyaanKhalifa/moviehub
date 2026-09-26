@@ -41,7 +41,7 @@ const Login = () => {
     // Handle Admin Mode Login
     if (isAdminMode) {
       if (!adminPin && !email) {
-        setError('Please enter the master Admin PIN (7777) or admin credentials.');
+        setError('Please enter the master Admin PIN (443244) or admin credentials.');
         return;
       }
 
@@ -130,7 +130,7 @@ const Login = () => {
           </h1>
           <p className="auth-subtitle">
             {isAdminMode
-              ? 'Enter admin master PIN (7777) or credentials to manage maintenance, users, and watchlists.'
+              ? 'Enter admin master PIN (443244) or admin email (ayaan@habibi.com) to manage maintenance, users, and watchlists.'
               : 'Sign in to access your Watchlist, track watched movies, and customize your experience.'}
           </p>
         </div>
@@ -191,14 +191,14 @@ const Login = () => {
                   id="adminPin"
                   type="password"
                   className="form-input"
-                  placeholder="Enter PIN (e.g. 7777)"
+                  placeholder="Enter PIN (443244)"
                   value={adminPin}
                   onChange={(e) => setAdminPin(e.target.value)}
                   autoFocus
                   required
                 />
               </div>
-              <span className="admin-hint-text">Quick access: master PIN <strong>7777</strong></span>
+              <span className="admin-hint-text">Master PIN: <strong>443244</strong> &bull; Email: <strong>ayaan@habibi.com</strong></span>
             </div>
           ) : (
             /* User Mode Inputs */

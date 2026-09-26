@@ -20,7 +20,7 @@ const MaintenanceScreen = () => {
       setShowAdminModal(false);
       navigate('/admin');
     } else {
-      setAdminError('Incorrect PIN. Try 7777 or admin credentials.');
+      setAdminError('Incorrect PIN. Try 443244 or admin credentials.');
     }
   };
 
@@ -113,7 +113,7 @@ const MaintenanceScreen = () => {
             </div>
 
             <p className="admin-modal-desc">
-              Enter admin master PIN (<strong>7777</strong>) or password to manage maintenance mode.
+              Enter admin master PIN (<strong>443244</strong>) or password to manage maintenance mode.
             </p>
 
             {adminError && <div className="admin-modal-error">{adminError}</div>}
@@ -121,7 +121,7 @@ const MaintenanceScreen = () => {
             <form onSubmit={handleAdminUnlock} className="admin-modal-form">
               <input
                 type="password"
-                placeholder="Enter PIN (7777) or admin password"
+                placeholder="Enter PIN (443244) or admin password"
                 value={adminPin}
                 onChange={(e) => setAdminPin(e.target.value)}
                 autoFocus
