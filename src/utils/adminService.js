@@ -1,4 +1,5 @@
-// Admin & Maintenance Data Service
+// Admin & Maintenance Data Service with full CRUD operations for Users & Watchlists
+import { getVisitorStats } from './visitorTracker';
 
 export const DEFAULT_MAINTENANCE_POEM = `The reels are resting, the screen is dark,
 We're polishing magic, igniting the spark.
@@ -12,7 +13,7 @@ const ADMIN_STORAGE_KEY = 'moviehub_admin_session';
 const MAINTENANCE_STORAGE_KEY = 'moviehub_maintenance_config';
 const USERS_STORAGE_KEY = 'moviehub_registered_users';
 
-// Initial Seed Users for demonstration if none exist
+// Seed Initial Users
 const INITIAL_USERS = [
   {
     uid: 'admin-001',
@@ -52,7 +53,7 @@ const INITIAL_USERS = [
   }
 ];
 
-// Seed initial watchlists for demo users if empty
+// Seed initial watchlists
 const INITIAL_WATCHLISTS = {
   'user-002': [
     {
@@ -142,7 +143,7 @@ const INITIAL_WATCHLISTS = {
   ]
 };
 
-// Initialize Users and Watchlists in localStorage if needed
+// Initialize Storage
 export const initAdminStorage = () => {
   try {
     if (!localStorage.getItem(USERS_STORAGE_KEY)) {
@@ -159,7 +160,7 @@ export const initAdminStorage = () => {
   }
 };
 
-// Register or update user in central admin list
+// Record or sync user activity
 export const recordUserActivity = (user) => {
   if (!user || !user.uid) return;
   try {
@@ -173,7 +174,7 @@ export const recordUserActivity = (user) => {
     if (existingIndex >= 0) {
       users[existingIndex] = {
         ...users[existingIndex],
-        displayName: user.displayName || users[existingIndex].displayName || 'MovieHub Fan',
+        displayName: user.displayName || users[existingIndex].displayName || 'MovieHub Member',
         email: user.email || users[existingIndex].email,
         role: (user.email === 'ayaan@habibi.com' || users[existingIndex].role === 'admin') ? 'admin' : 'user',
         lastLogin: now
@@ -182,7 +183,7 @@ export const recordUserActivity = (user) => {
       users.push({
         uid: user.uid,
         email: user.email || 'guest@moviehub.com',
-        displayName: user.displayName || 'MovieHub Fan',
+        displayName: user.displayName || 'MovieHub Member',
         role: user.email === 'ayaan@habibi.com' ? 'admin' : 'user',
         createdAt: now,
         lastLogin: now,
@@ -196,7 +197,11 @@ export const recordUserActivity = (user) => {
   }
 };
 
-// Get all users
+// ==========================================
+// USER CRUD OPERATIONS
+// ==========================================
+
+// READ ALL USERS
 export const getAllUsers = () => {
   try {
     initAdminStorage();
@@ -207,17 +212,141 @@ export const getAllUsers = () => {
   }
 };
 
-// Get all users with their full watchlist data
+// CREATE USER
+export const createNewUser = ({ displayName, email, role = 'user', status = 'active' }) => {
+  try {
+    initAdminStorage();
+    const users = getAllUsers();
+    const newUser = {
+      uid: `user-${Date.now()}`,
+      email: email.trim(),
+      displayName: displayName.trim() || 'New User',
+      role: role.toLowerCase(),
+      createdAt: new Date().toISOString(),
+      lastLogin: new Date().toISOString(),
+      status
+    };
+    users.unshift(newUser);
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    return { success: true, user: newUser };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// UPDATE USER
+export const updateUser = (uid, updates) => {
+  try {
+    initAdminStorage();
+    const users = getAllUsers();
+    const index = users.findIndex((u) => u.uid === uid);
+    if (index === -1) return { success: false, error: 'User not found' };
+
+    users[index] = { ...users[index], ...updates };
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    return { success: true, user: users[index] };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// DELETE USER
+export const deleteUser = (uid) => {
+  try {
+    initAdminStorage();
+    let users = getAllUsers();
+    users = users.filter((u) => u.uid !== uid);
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    // Also remove their watchlist
+    localStorage.removeItem(`moviehub_watchlist_${uid}`);
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// ==========================================
+// WATCHLIST CRUD OPERATIONS
+// ==========================================
+
+// READ USER WATCHLIST
+export const getUserWatchlist = (uid) => {
+  try {
+    const raw = localStorage.getItem(`moviehub_watchlist_${uid}`);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+// ADD MOVIE TO USER WATCHLIST
+export const addMovieToUserWatchlist = (uid, movie) => {
+  try {
+    const list = getUserWatchlist(uid);
+    if (list.some((m) => m.imdbID === movie.imdbID)) {
+      return { success: false, error: 'Movie already in watchlist' };
+    }
+    const newItem = {
+      imdbID: movie.imdbID || `custom-${Date.now()}`,
+      Title: movie.Title || 'Untitled Movie',
+      Year: movie.Year || '2026',
+      Poster: movie.Poster || '',
+      Type: movie.Type || 'movie',
+      imdbRating: movie.imdbRating || '7.5',
+      status: movie.status || 'undone',
+      addedAt: new Date().toISOString()
+    };
+    list.unshift(newItem);
+    localStorage.setItem(`moviehub_watchlist_${uid}`, JSON.stringify(list));
+    return { success: true, item: newItem };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// UPDATE WATCHLIST ITEM (Toggle Watched/Undone)
+export const updateUserWatchlistItem = (uid, imdbID, updates) => {
+  try {
+    const list = getUserWatchlist(uid);
+    const index = list.findIndex((m) => m.imdbID === imdbID);
+    if (index === -1) return { success: false, error: 'Item not found' };
+
+    list[index] = { ...list[index], ...updates };
+    localStorage.setItem(`moviehub_watchlist_${uid}`, JSON.stringify(list));
+    return { success: true, item: list[index] };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// DELETE MOVIE FROM USER WATCHLIST
+export const removeMovieFromUserWatchlist = (uid, imdbID) => {
+  try {
+    let list = getUserWatchlist(uid);
+    list = list.filter((m) => m.imdbID !== imdbID);
+    localStorage.setItem(`moviehub_watchlist_${uid}`, JSON.stringify(list));
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// CLEAR ALL ITEMS FROM USER WATCHLIST
+export const clearUserWatchlist = (uid) => {
+  try {
+    localStorage.removeItem(`moviehub_watchlist_${uid}`);
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+// GET ALL USERS WITH WATCHLIST METRICS
 export const getAllUsersWithWatchlists = () => {
   try {
     const users = getAllUsers();
     return users.map((user) => {
-      let watchlist = [];
-      try {
-        const raw = localStorage.getItem(`moviehub_watchlist_${user.uid}`);
-        if (raw) watchlist = JSON.parse(raw);
-      } catch {}
-
+      const watchlist = getUserWatchlist(user.uid);
       const watched = watchlist.filter((m) => m.status === 'watched').length;
       const undone = watchlist.filter((m) => m.status !== 'watched').length;
 
@@ -235,7 +364,9 @@ export const getAllUsersWithWatchlists = () => {
   }
 };
 
-// Maintenance Configuration
+// ==========================================
+// MAINTENANCE MODE OPERATIONS
+// ==========================================
 export const getMaintenanceConfig = () => {
   try {
     const raw = localStorage.getItem(MAINTENANCE_STORAGE_KEY);
@@ -259,7 +390,6 @@ export const saveMaintenanceConfig = (config) => {
       updatedAt: new Date().toISOString()
     };
     localStorage.setItem(MAINTENANCE_STORAGE_KEY, JSON.stringify(updated));
-    // Dispatch storage event so other tabs/components react immediately
     window.dispatchEvent(new Event('storage'));
     return updated;
   } catch (err) {
@@ -268,7 +398,7 @@ export const saveMaintenanceConfig = (config) => {
   }
 };
 
-// Admin Session verification
+// Admin Session
 export const verifyAdminSession = () => {
   try {
     const session = sessionStorage.getItem(ADMIN_STORAGE_KEY) || localStorage.getItem(ADMIN_STORAGE_KEY);

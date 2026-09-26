@@ -1,14 +1,14 @@
-/* Full Screen Maintenance Screen */
+/* Maintenance Screen inside Header & Footer Layout */
 .maintenance-overlay {
-  position: fixed;
-  inset: 0;
+  min-height: calc(100vh - 200px);
+  position: relative;
+  width: 100%;
   background: radial-gradient(circle at center, #141414 0%, #050505 70%, #000000 100%);
-  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  overflow-y: auto;
+  padding: 40px 20px 60px 20px;
+  overflow: hidden;
   color: #ffffff;
 }
 

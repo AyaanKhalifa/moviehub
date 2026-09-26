@@ -34,31 +34,31 @@ function MainAppLayout() {
   const isBypassRoute = location.pathname === '/admin' || location.pathname === '/login';
   const shouldShowMaintenance = isMaintenanceActive && !isAdmin && !isBypassRoute;
 
-  if (shouldShowMaintenance) {
-    return <MaintenanceScreen />;
-  }
-
   return (
     <div className="app-container">
       <Navbar />
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/movie/:id" element={<MovieDetails />} />
-          <Route path="/watchlist" element={<Watchlist />} />
-          <Route path="/upcoming" element={<Upcoming />} />
-          <Route path="/latest" element={<Latest />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/cookies" element={<Cookies />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        {shouldShowMaintenance ? (
+          <MaintenanceScreen />
+        ) : (
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/upcoming" element={<Upcoming />} />
+            <Route path="/latest" element={<Latest />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/cookies" element={<Cookies />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        )}
       </main>
       <Footer />
       <MobileBottomNav />

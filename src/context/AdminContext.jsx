@@ -5,8 +5,17 @@ import {
   verifyAdminSession, 
   setAdminSession,
   recordUserActivity,
-  initAdminStorage
+  initAdminStorage,
+  getAllUsersWithWatchlists,
+  createNewUser,
+  updateUser,
+  deleteUser,
+  addMovieToUserWatchlist,
+  updateUserWatchlistItem,
+  removeMovieFromUserWatchlist,
+  clearUserWatchlist
 } from '../utils/adminService';
+import { initVisitorTracker, getVisitorStats } from '../utils/visitorTracker';
 import { useAuth } from './AuthContext';
 
 const AdminContext = createContext();
@@ -23,10 +32,15 @@ export const AdminProvider = ({ children }) => {
   const { currentUser } = useAuth();
   const [isAdmin, setIsAdmin] = useState(() => verifyAdminSession());
   const [maintenanceConfig, setMaintenanceConfig] = useState(() => getMaintenanceConfig());
+  const [visitorStats, setVisitorStats] = useState(() => getVisitorStats());
+  const [usersData, setUsersData] = useState(() => getAllUsersWithWatchlists());
 
-  // Initialize storage once on mount
+  // Initialize storage and visitor metrics on mount
   useEffect(() => {
     initAdminStorage();
+    const stats = initVisitorTracker();
+    setVisitorStats(stats);
+    setUsersData(getAllUsersWithWatchlists());
   }, []);
 
   // Sync user activity when logged in
@@ -37,6 +51,7 @@ export const AdminProvider = ({ children }) => {
         setIsAdmin(true);
         setAdminSession(true);
       }
+      setUsersData(getAllUsersWithWatchlists());
     }
   }, [currentUser]);
 
@@ -45,14 +60,25 @@ export const AdminProvider = ({ children }) => {
     const handleStorageChange = () => {
       setMaintenanceConfig(getMaintenanceConfig());
       setIsAdmin(verifyAdminSession());
+      setVisitorStats(getVisitorStats());
+      setUsersData(getAllUsersWithWatchlists());
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('visitor_update', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('visitor_update', handleStorageChange);
+    };
   }, []);
 
+  const refreshData = () => {
+    setUsersData(getAllUsersWithWatchlists());
+    setVisitorStats(getVisitorStats());
+    setMaintenanceConfig(getMaintenanceConfig());
+  };
+
   const adminLogin = (emailOrPin, password) => {
-    // Admin credentials check: master PIN 443244 or email ayaan@habibi.com + password 443244
     const isPinMatch = emailOrPin === '443244';
     const isCredentialsMatch = 
       (emailOrPin === 'ayaan@habibi.com' || emailOrPin === 'ayaan' || emailOrPin === 'admin') && 
@@ -82,15 +108,73 @@ export const AdminProvider = ({ children }) => {
     return updated;
   };
 
+  // User CRUD
+  const addUser = (userData) => {
+    const res = createNewUser(userData);
+    refreshData();
+    return res;
+  };
+
+  const editUser = (uid, updates) => {
+    const res = updateUser(uid, updates);
+    refreshData();
+    return res;
+  };
+
+  const removeUser = (uid) => {
+    const res = deleteUser(uid);
+    refreshData();
+    return res;
+  };
+
+  // Watchlist CRUD
+  const addWatchlistMovie = (uid, movie) => {
+    const res = addMovieToUserWatchlist(uid, movie);
+    refreshData();
+    return res;
+  };
+
+  const toggleWatchlistMovieStatus = (uid, imdbID, currentStatus) => {
+    const newStatus = currentStatus === 'watched' ? 'undone' : 'watched';
+    const res = updateUserWatchlistItem(uid, imdbID, { 
+      status: newStatus,
+      completedAt: newStatus === 'watched' ? new Date().toISOString() : null 
+    });
+    refreshData();
+    return res;
+  };
+
+  const removeWatchlistMovie = (uid, imdbID) => {
+    const res = removeMovieFromUserWatchlist(uid, imdbID);
+    refreshData();
+    return res;
+  };
+
+  const clearUserAllWatchlist = (uid) => {
+    const res = clearUserWatchlist(uid);
+    refreshData();
+    return res;
+  };
+
   return (
     <AdminContext.Provider
       value={{
         isAdmin,
         isMaintenanceActive: maintenanceConfig.isActive,
         maintenanceConfig,
+        visitorStats,
+        usersData,
         adminLogin,
         adminLogout,
-        updateMaintenance
+        updateMaintenance,
+        refreshData,
+        addUser,
+        editUser,
+        removeUser,
+        addWatchlistMovie,
+        toggleWatchlistMovieStatus,
+        removeWatchlistMovie,
+        clearUserAllWatchlist
       }}
     >
       {children}

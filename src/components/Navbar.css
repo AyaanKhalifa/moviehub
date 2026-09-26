@@ -374,6 +374,32 @@
   color: var(--brand-color);
 }
 
+/* Admin Link in Navbar */
+.navbar-admin-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: rgba(245, 197, 24, 0.12);
+  border: 1px solid rgba(245, 197, 24, 0.4);
+  color: #f5c518;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.navbar-admin-link:hover {
+  background: #f5c518;
+  color: #000000;
+}
+
+.navbar-admin-link:hover .gold-shield {
+  color: #000000;
+}
+
 .watchlist-badge {
   background: var(--brand-color);
   color: #000000;

@@ -14,10 +14,12 @@ import {
   LogIn,
   ChevronRight, 
   LayoutGrid,
-  Trash2
+  Trash2,
+  Shield
 } from 'lucide-react';
 import { useWatchlist } from '../context/WatchlistContext';
 import { useAuth } from '../context/AuthContext';
+import { useAdmin } from '../context/AdminContext';
 import { searchMovies, isAnimeItem } from '../utils/api';
 import { getRecentSearches, addRecentSearch, removeRecentSearch, clearRecentSearches } from '../utils/recentSearches';
 import CategoriesModal from './CategoriesModal';
@@ -34,6 +36,7 @@ const Navbar = () => {
 
   const { watchlist } = useWatchlist();
   const { currentUser, isAuthenticated } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
   const searchContainerRef = useRef(null);
@@ -350,6 +353,14 @@ const Navbar = () => {
                 <span className="watchlist-badge">{watchlist.length}</span>
               )}
             </Link>
+
+            {/* Admin Command Center Quick Button */}
+            {isAdmin && (
+              <Link to="/admin" className="navbar-admin-link" title="Admin Command Center">
+                <Shield size={18} className="gold-shield" />
+                <span className="navbar-admin-label">Admin</span>
+              </Link>
+            )}
 
             {/* User Profile or Sign In Button */}
             {isAuthenticated ? (
