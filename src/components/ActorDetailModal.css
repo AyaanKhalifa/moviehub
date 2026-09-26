@@ -1,0 +1,445 @@
+/* ==========================================================================
+   Actor Detail Modal Styles (OLED Pure Black, IMDb Gold Accents)
+   ========================================================================== */
+
+.actor-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.actor-modal-container {
+  width: 100%;
+  max-width: 820px;
+  max-height: 90vh;
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(245, 197, 24, 0.1);
+  overflow-y: auto;
+  position: relative;
+  animation: modalScaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Close button */
+.actor-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.actor-modal-close:hover {
+  background: rgba(245, 197, 24, 0.2);
+  color: #f5c518;
+  border-color: #f5c518;
+  transform: rotate(90deg);
+}
+
+/* Modal Body */
+.actor-modal-body {
+  padding: 2.25rem;
+}
+
+/* Profile Header */
+.actor-profile-header {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+  margin-bottom: 2.25rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.actor-modal-avatar-wrap {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  border: 3px solid rgba(245, 197, 24, 0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 197, 24, 0.25);
+  background: #000000;
+}
+
+.actor-modal-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.actor-modal-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1f242e 0%, #0d1117 100%);
+  color: #f5c518;
+}
+
+/* Profile Info */
+.actor-profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.actor-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(245, 197, 24, 0.12);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  border-radius: 9999px;
+  color: #f5c518;
+  font-size: 0.82rem;
+  margin-bottom: 0.65rem;
+}
+
+.actor-role-badge strong {
+  color: #ffffff;
+}
+
+.actor-modal-name {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.85rem 0;
+  letter-spacing: -0.02em;
+}
+
+/* Meta row */
+.actor-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.actor-meta-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.meta-icon {
+  color: #f5c518;
+}
+
+/* External Links */
+.actor-external-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.actor-external-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.actor-external-btn.imdb-btn {
+  background: #f5c518;
+  color: #000000;
+}
+
+.actor-external-btn.imdb-btn:hover {
+  background: #e2b616;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(245, 197, 24, 0.35);
+}
+
+.imdb-btn-badge {
+  background: #000000;
+  color: #f5c518;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.actor-external-btn.tvmaze-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.actor-external-btn.tvmaze-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Filmography Section */
+.actor-filmography-section {
+  width: 100%;
+}
+
+.filmography-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.filmography-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.filmo-icon {
+  color: #f5c518;
+}
+
+.filmography-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.filmo-count {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Filmography Loading */
+.filmography-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #f5c518;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Filmography Grid */
+.filmography-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1.15rem;
+}
+
+.filmo-card {
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.filmo-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(245, 197, 24, 0.5);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(245, 197, 24, 0.2);
+}
+
+.filmo-poster-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  position: relative;
+  background: #000000;
+  overflow: hidden;
+}
+
+.filmo-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.filmo-card:hover .filmo-poster-img {
+  transform: scale(1.06);
+}
+
+.filmo-poster-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111111;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.filmo-poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.filmo-card:hover .filmo-poster-overlay {
+  opacity: 1;
+}
+
+.filmo-view-btn {
+  padding: 0.35rem 0.65rem;
+  background: #f5c518;
+  color: #000000;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 6px;
+}
+
+.filmo-info {
+  padding: 0.65rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.filmo-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filmo-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.filmo-year {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+}
+
+.filmo-char {
+  font-size: 0.72rem;
+  color: #f5c518;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filmography-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.filmo-search-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #f5c518;
+  text-decoration: underline;
+  font-size: 0.85rem;
+}
+
+/* Responsive Modal */
+@media (max-width: 640px) {
+  .actor-modal-body {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .actor-profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  .actor-modal-avatar-wrap {
+    width: 110px;
+    height: 110px;
+  }
+
+  .actor-modal-name {
+    font-size: 1.6rem;
+  }
+
+  .actor-meta-row {
+    justify-content: center;
+  }
+
+  .actor-external-links {
+    justify-content: center;
+  }
+
+  .filmography-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+}

@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* PURE BLACK OLED THEME */
+  --bg-primary: #000000;
+  --bg-secondary: #090909;
+  --bg-card: #111111;
+  --bg-card-hover: #181818;
+  --bg-tertiary: #161616;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  
+  --brand-color: #f5c518; /* IMDb Signature Gold */
+  --brand-hover: #ffd233;
+  --brand-glow: rgba(245, 197, 24, 0.45);
+  
+  --series-color: #9333ea;
+  --series-gradient: linear-gradient(135deg, #9333ea 0%, #6366f1 100%);
+  
+  --anime-color: #e11d48;
+  --anime-gradient: linear-gradient(135deg, #e11d48 0%, #ea580c 100%);
+  
+  --border-color: #222222;
+  --border-hover: #f5c518;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: #000000;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #000000 !important;
+  background-image: none !important;
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Responsive Container: Scales seamlessly from Smart TV to Mobile */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+/* Ultra Large Screens & Smart TVs (2500px+) */
+@media (min-width: 2500px) {
+  .container {
+    max-width: 2200px;
+    padding: 0 48px;
+  }
+}
+
+/* 4K & Ultrawide PC / Large TVs (1800px - 2499px) */
+@media (min-width: 1800px) and (max-width: 2499px) {
+  .container {
+    max-width: 1680px;
+    padding: 0 36px;
+  }
+}
+
+/* Tablets (768px - 1023px) */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+/* Mobile Phones (480px - 767px) */
+@media (max-width: 767px) and (min-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* Compact Mobile (under 480px) */
+@media (max-width: 479px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
+/* Fluid Responsive Grid for All Devices */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 22px;
+}
+
+/* 4K & Smart TVs */
+@media (min-width: 2500px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+  }
+}
+
+/* Large Desktop / 1080p TV */
+@media (min-width: 1800px) and (max-width: 2499px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+  }
+}
+
+/* Laptop / Standard Desktop */
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+}
+
+/* Mobile (2 Columns) */
+@media (max-width: 479px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* Loader */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  gap: 16px;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 3px solid #222222;
+  border-top-color: var(--brand-color);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+  box-shadow: 0 0 16px rgba(245, 197, 24, 0.25);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

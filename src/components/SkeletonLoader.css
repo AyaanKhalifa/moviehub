@@ -1,0 +1,192 @@
+/* Shimmer Animation for pure black OLED backgrounds */
+@keyframes shimmerWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #111111 0%,
+    #1e1e1e 50%,
+    #111111 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerWave 1.6s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Skeleton Card */
+.skeleton-card {
+  background: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.skeleton-poster {
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  border-radius: 0;
+}
+
+.skeleton-card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-title {
+  height: 16px;
+  width: 80%;
+}
+
+.skeleton-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skeleton-badge {
+  height: 14px;
+  width: 45px;
+  border-radius: 4px;
+}
+
+.skeleton-year {
+  height: 14px;
+  width: 35px;
+}
+
+/* Skeleton Hero */
+.skeleton-hero {
+  min-height: 480px;
+  padding: 50px 0;
+  border-bottom: 1px solid #1a1a1a;
+  background: #080808;
+  display: flex;
+  align-items: center;
+}
+
+.skeleton-hero-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+}
+
+.skeleton-hero-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 650px;
+}
+
+.skeleton-pill {
+  width: 120px;
+  height: 24px;
+  border-radius: 20px;
+}
+
+.skeleton-hero-title {
+  height: 48px;
+  width: 90%;
+  border-radius: 8px;
+}
+
+.skeleton-hero-title-sub {
+  height: 32px;
+  width: 50%;
+  border-radius: 8px;
+}
+
+.skeleton-hero-meta-row {
+  display: flex;
+  gap: 12px;
+}
+
+.skeleton-chip {
+  width: 70px;
+  height: 26px;
+  border-radius: 12px;
+}
+
+.skeleton-hero-plot {
+  height: 60px;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.skeleton-hero-btn-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.skeleton-btn {
+  width: 140px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.skeleton-hero-right {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.skeleton-hero-poster {
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* Skeleton Details */
+.skeleton-details-container {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+.skeleton-details-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 48px;
+}
+
+.skeleton-detail-poster {
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.skeleton-details-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .skeleton-hero-container {
+    flex-direction: column-reverse;
+  }
+  .skeleton-hero-right {
+    width: 200px;
+  }
+  .skeleton-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .skeleton-detail-poster {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}

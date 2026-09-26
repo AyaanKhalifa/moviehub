@@ -1,0 +1,111 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #000000;
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 60px;
+}
+
+h1.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.5px;
+}
+
+h1.page-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 24px;
+  background-color: var(--brand-color);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(245, 197, 24, 0.5);
+}
+
+.error-message {
+  color: #ff5252;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.25);
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 600px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 60px 20px;
+  font-size: 16px;
+}
+
+/* Pure Black Footer */
+.app-footer {
+  background: #000000;
+  border-top: 1px solid #1a1a1a;
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.footer-sub {
+  font-size: 14px;
+  color: #737373;
+  max-width: 420px;
+}
+
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 13px;
+  color: #737373;
+}
+
+.footer-copy {
+  color: #525252;
+}
+
+@media (max-width: 700px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .footer-meta {
+    align-items: flex-start;
+  }
+  h1.page-title {
+    font-size: 22px;
+  }
+}

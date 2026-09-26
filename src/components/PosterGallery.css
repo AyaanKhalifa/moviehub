@@ -1,0 +1,207 @@
+.poster-gallery-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.poster-gallery-main {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0d0d0d;
+  border: 1px solid #222222;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(245, 197, 24, 0.12);
+}
+
+.poster-main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.poster-gallery-wrapper:hover .poster-main-image {
+  transform: scale(1.02);
+}
+
+/* Auto-scroll badge */
+.poster-autoscroll-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: #a3a3a3;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.poster-autoscroll-badge.active {
+  color: #000000;
+  background: var(--brand-color);
+  border-color: var(--brand-color);
+  box-shadow: 0 0 12px rgba(245, 197, 24, 0.5);
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #000000;
+  animation: pulseDot 1s infinite alternate;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Poster label tag */
+.poster-label-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Gallery nav arrows */
+.gallery-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  opacity: 0.75;
+}
+
+.gallery-nav-arrow:hover {
+  opacity: 1;
+  background: var(--brand-color);
+  color: #000000;
+  border-color: var(--brand-color);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav-arrow.left {
+  left: 8px;
+}
+
+.gallery-nav-arrow.right {
+  right: 8px;
+}
+
+/* Thumbnail strip */
+.poster-thumbnails-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.poster-thumbnails-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
+
+.poster-thumb-item {
+  position: relative;
+  width: 54px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #141414;
+  border: 2px solid #222222;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.poster-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.poster-thumb-item:hover {
+  border-color: #555555;
+  transform: translateY(-2px);
+}
+
+.poster-thumb-item.active {
+  border-color: var(--brand-color);
+  box-shadow: 0 0 10px rgba(245, 197, 24, 0.5);
+  transform: translateY(-2px);
+}
+
+.thumb-active-glow {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--brand-color);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.gallery-counter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #737373;
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.poster-gallery-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: #0d0d0d;
+  border: 1px solid #1f1f1f;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #525252;
+}

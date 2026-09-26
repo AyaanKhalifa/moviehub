@@ -1,0 +1,313 @@
+/* ==========================================================================
+   Upcoming Releases Styles (IMDb-Style Cards, Posters, Trailers)
+   ========================================================================== */
+
+.upcoming-page {
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+}
+
+.upcoming-hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.upcoming-title-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.upcoming-accent-bar {
+  width: 5px;
+  height: 38px;
+  background: linear-gradient(180deg, #f5c518 0%, #e2b616 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(245, 197, 24, 0.4);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.upcoming-page-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.upcoming-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+  max-width: 620px;
+  line-height: 1.5;
+}
+
+/* Filter pills */
+.upcoming-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 4px;
+}
+
+.upcoming-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upcoming-pill:hover {
+  color: #ffffff;
+}
+
+.upcoming-pill.active {
+  background: #f5c518;
+  color: #000000;
+  box-shadow: 0 2px 10px rgba(245, 197, 24, 0.35);
+}
+
+/* Cards Grid */
+.upcoming-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.upcoming-card {
+  display: flex;
+  gap: 2rem;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.75rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.upcoming-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 197, 24, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 197, 24, 0.1);
+}
+
+/* Poster Column */
+.upcoming-poster-wrap {
+  width: 220px;
+  aspect-ratio: 2 / 3;
+  flex-shrink: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  background: #000000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.upcoming-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.upcoming-card:hover .upcoming-poster-img {
+  transform: scale(1.05);
+}
+
+.upcoming-status-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5c518;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+}
+
+.upcoming-play-overlay-btn {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  opacity: 0;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.upcoming-poster-wrap:hover .upcoming-play-overlay-btn {
+  opacity: 1;
+}
+
+.play-icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #f5c518;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(245, 197, 24, 0.6);
+}
+
+.play-label {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Info Column */
+.upcoming-info-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.upcoming-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.upcoming-type-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #818cf8;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.upcoming-date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f5c518;
+  background: rgba(245, 197, 24, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 197, 24, 0.25);
+}
+
+.upcoming-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.85rem 0;
+  letter-spacing: -0.02em;
+}
+
+.upcoming-plot {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+}
+
+.upcoming-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.upcoming-detail-row {
+  display: flex;
+  font-size: 0.88rem;
+  gap: 0.5rem;
+}
+
+.detail-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.detail-value {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Actions */
+.upcoming-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upcoming-trailer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.4rem;
+  background: #f5c518;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(245, 197, 24, 0.35);
+}
+
+.upcoming-trailer-btn:hover {
+  background: #e2b616;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 197, 24, 0.5);
+}
+
+@media (max-width: 768px) {
+  .upcoming-card {
+    flex-direction: column;
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .upcoming-poster-wrap {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .upcoming-title {
+    font-size: 1.4rem;
+  }
+}

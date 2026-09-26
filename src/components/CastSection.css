@@ -1,0 +1,425 @@
+/* ==========================================================================
+   IMDb-Style Top Cast Section Styles (OLED Pure Black & Responsive)
+   ========================================================================== */
+
+.cast-section-container {
+  margin: 3rem 0;
+  padding: 1.75rem;
+  background: rgba(10, 10, 10, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl, 16px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header Row */
+.cast-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cast-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.imdb-accent-bar {
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(180deg, #f5c518 0%, #e2b616 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(245, 197, 24, 0.4);
+}
+
+.cast-section-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.cast-count-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Header Controls */
+.cast-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Mode Toggle (Horizontal vs Vertical Grid) */
+.cast-mode-toggle {
+  display: flex;
+  align-items: center;
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.cast-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cast-toggle-btn:hover {
+  color: #ffffff;
+}
+
+.cast-toggle-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Arrow Navigation Buttons */
+.cast-carousel-arrows {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cast-arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cast-arrow-btn:hover:not(.disabled) {
+  background: rgba(245, 197, 24, 0.2);
+  border-color: #f5c518;
+  color: #f5c518;
+  transform: scale(1.08);
+}
+
+.cast-arrow-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Horizontal Scroll Mode */
+.cast-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cast-scroll-track {
+  display: flex;
+  gap: 1.15rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245, 197, 24, 0.3) transparent;
+}
+
+.cast-scroll-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.cast-scroll-track::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+}
+
+.cast-scroll-track::-webkit-scrollbar-thumb {
+  background: rgba(245, 197, 24, 0.35);
+  border-radius: 9999px;
+}
+
+.cast-scroll-track::-webkit-scrollbar-thumb:hover {
+  background: #f5c518;
+}
+
+/* Cast Card Base */
+.cast-card {
+  flex: 0 0 160px;
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: default;
+  position: relative;
+}
+
+.cast-card:hover {
+  transform: translateY(-4px);
+  background: rgba(25, 25, 25, 0.95);
+  border-color: rgba(245, 197, 24, 0.4);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(245, 197, 24, 0.15);
+}
+
+/* Avatar Styling */
+.cast-avatar-wrap {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 0.85rem;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  background: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.28s ease, transform 0.28s ease;
+}
+
+.cast-card:hover .cast-avatar-wrap {
+  border-color: #f5c518;
+  transform: scale(1.04);
+}
+
+.cast-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cast-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1f242e 0%, #0d1117 100%);
+}
+
+.cast-avatar-initials {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f5c518;
+  letter-spacing: 1px;
+}
+
+/* Cast Info */
+.cast-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cast-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.cast-character {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-style: normal;
+}
+
+.cast-card:hover .cast-character {
+  color: #f5c518;
+}
+
+/* Click hint badge */
+.cast-click-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #f5c518;
+  background: rgba(245, 197, 24, 0.08);
+  border: 1px solid rgba(245, 197, 24, 0.2);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  margin-left: 0.5rem;
+}
+
+/* Interactive Card & Film Pill */
+.interactive-cast-card {
+  cursor: pointer !important;
+}
+
+.interactive-cast-card:hover {
+  transform: translateY(-6px);
+  border-color: #f5c518;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75), 0 0 18px rgba(245, 197, 24, 0.25);
+}
+
+.cast-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 50%;
+}
+
+.cast-card:hover .cast-hover-overlay {
+  opacity: 1;
+}
+
+.cast-hover-text {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #f5c518;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #f5c518;
+}
+
+/* Film Name Pill on Every Cast Card */
+.cast-film-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  margin-top: 0.35rem;
+  max-width: 100%;
+}
+
+.film-pill-icon {
+  color: #f5c518;
+  flex-shrink: 0;
+}
+
+.film-pill-text {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cast-card:hover .cast-film-pill {
+  background: rgba(245, 197, 24, 0.1);
+  border-color: rgba(245, 197, 24, 0.3);
+}
+
+.cast-card:hover .film-pill-text {
+  color: #ffffff;
+}
+
+/* Vertical Grid Mode */
+.cast-vertical-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+}
+
+.cast-card.grid-card {
+  flex: none;
+  width: 100%;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .cast-section-container {
+    padding: 1.25rem 1rem;
+    margin: 2rem 0;
+  }
+
+  .cast-card {
+    flex: 0 0 135px;
+    padding: 0.85rem 0.5rem;
+  }
+
+  .cast-avatar-wrap {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cast-section-title {
+    font-size: 1.2rem;
+  }
+
+  .toggle-text {
+    display: none;
+  }
+
+  .cast-vertical-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.85rem;
+  }
+}
+
+@media (min-width: 2000px) {
+  .cast-card {
+    flex: 0 0 190px;
+    padding: 1.25rem 1rem;
+  }
+
+  .cast-avatar-wrap {
+    width: 115px;
+    height: 115px;
+  }
+
+  .cast-name {
+    font-size: 1.05rem;
+  }
+
+  .cast-character {
+    font-size: 0.9rem;
+  }
+}
