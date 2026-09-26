@@ -10,6 +10,12 @@
   padding-bottom: 60px;
 }
 
+@media (max-width: 768px) {
+  .main-content {
+    padding-bottom: 90px;
+  }
+}
+
 h1.page-title {
   font-size: 28px;
   font-weight: 800;

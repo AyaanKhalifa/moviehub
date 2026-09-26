@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import MobileBottomNav from './components/MobileBottomNav';
+import PwaInstallPrompt from './components/PwaInstallPrompt';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import MovieDetails from './pages/MovieDetails';
@@ -45,6 +47,8 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <MobileBottomNav />
+          <PwaInstallPrompt />
         </div>
       </WatchlistProvider>
     </AuthProvider>
