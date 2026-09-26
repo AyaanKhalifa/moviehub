@@ -81,6 +81,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState('maintenance'); // 'maintenance' | 'users' | 'watchlists'
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserFilter, setSelectedUserFilter] = useState('all');
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
 
   // Form states for Maintenance Tab
   const [isMaintenanceOn, setIsMaintenanceOn] = useState(isMaintenanceActive);
@@ -102,12 +103,24 @@ const Admin = () => {
 
   const navigate = useNavigate();
 
-  // Redirect if not admin
+  // Guard: wait for session to load before redirecting (prevents race condition)
   useEffect(() => {
-    if (!isAdmin) {
+    const timer = setTimeout(() => {
+      setIsCheckingSession(false);
+      if (!isAdmin) {
+        navigate('/login?redirect=/admin');
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // If admin status changes while on page, redirect
+  useEffect(() => {
+    if (!isCheckingSession && !isAdmin) {
       navigate('/login?redirect=/admin');
     }
-  }, [isAdmin, navigate]);
+  }, [isAdmin, isCheckingSession, navigate]);
 
   // Sync state when config updates
   useEffect(() => {
@@ -213,6 +226,17 @@ const Admin = () => {
     if (selectedUserFilter === 'empty_watchlist') return matchesQuery && u.totalItems === 0;
     return matchesQuery;
   });
+
+  if (isCheckingSession) {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', color: '#f5c518' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Shield size={40} style={{ marginBottom: '16px', opacity: 0.8 }} />
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1.1rem', opacity: 0.7 }}>Verifying admin session...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAdmin) return null;
 

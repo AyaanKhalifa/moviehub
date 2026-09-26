@@ -398,7 +398,9 @@ export const getMaintenanceConfig = () => {
   return {
     isActive: false,
     title: 'Upgrading the Cinema Experience',
+    message: 'System upgrade in progress. Optimizing stream speeds and refreshing the movie library.',
     poem: DEFAULT_MAINTENANCE_POEM,
+    pastConditions: 'Real-time database sync, live visitor analytics, and enhanced high-speed movie discovery engine.',
     eta: 'Back shortly with exciting new features',
     updatedAt: new Date().toISOString()
   };

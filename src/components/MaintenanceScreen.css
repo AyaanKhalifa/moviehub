@@ -161,8 +161,28 @@
   font-size: 26px;
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   letter-spacing: -0.5px;
+}
+
+/* Current Upgrade Notice */
+.maintenance-current-notice {
+  background: rgba(245, 197, 24, 0.12);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  color: #f5c518;
+  padding: 10px 18px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.notice-icon-spin {
+  animation: rotateReel 4s linear infinite;
+  flex-shrink: 0;
 }
 
 /* Poem Box */
@@ -211,6 +231,77 @@
 
 .poem-break {
   height: 10px;
+}
+
+/* Past Conditions & System Upgrade History */
+.maintenance-past-conditions-card {
+  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.past-conditions-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+}
+
+.past-conditions-header h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #f5c518;
+  margin: 0;
+}
+
+.history-gold-icon {
+  color: #f5c518;
+}
+
+.conditions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.condition-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #cccccc;
+}
+
+.condition-item.completed {
+  color: #a3a3a3;
+}
+
+.check-green {
+  color: #10b981;
+  min-width: 14px;
+  margin-top: 2px;
+}
+
+.pulse-bullet {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  background: #f5c518;
+  box-shadow: 0 0 8px #f5c518;
+  margin-top: 5px;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.condition-text strong {
+  color: #ffffff;
 }
 
 .maintenance-footer-info {

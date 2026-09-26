@@ -1,16 +1,18 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Film, Calendar, Sparkles, Bookmark, User, LogIn } from 'lucide-react';
+import { Film, Calendar, Sparkles, Bookmark, User, LogIn, Shield } from 'lucide-react';
 import { useWatchlist } from '../context/WatchlistContext';
 import { useAuth } from '../context/AuthContext';
+import { useAdmin } from '../context/AdminContext';
 import './MobileBottomNav.css';
 
 const MobileBottomNav = () => {
   const { watchlist } = useWatchlist();
   const { currentUser, isAuthenticated } = useAuth();
+  const { isAdmin } = useAdmin();
+  const isEffectiveAdmin = isAdmin || currentUser?.email === 'ayaan@habibi.com' || (typeof window !== 'undefined' && Boolean(localStorage.getItem('moviehub_admin_session') || sessionStorage.getItem('moviehub_admin_session')));
   const location = useLocation();
 
-  // Hide bottom nav on full-screen legal pages or auth pages if desired, or keep it accessible everywhere
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
       <NavLink
@@ -58,7 +60,17 @@ const MobileBottomNav = () => {
         <span className="mobile-nav-label">Watchlist</span>
       </NavLink>
 
-      {isAuthenticated ? (
+      {isEffectiveAdmin ? (
+        <NavLink
+          to="/admin"
+          className={({ isActive }) =>
+            `mobile-nav-item ${isActive ? 'active' : ''}`
+          }
+        >
+          <Shield size={20} className="mobile-nav-icon gold-shield" />
+          <span className="mobile-nav-label">Admin</span>
+        </NavLink>
+      ) : isAuthenticated ? (
         <NavLink
           to="/profile"
           className={({ isActive }) =>

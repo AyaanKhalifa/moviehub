@@ -37,6 +37,7 @@ const Navbar = () => {
   const { watchlist } = useWatchlist();
   const { currentUser, isAuthenticated } = useAuth();
   const { isAdmin } = useAdmin();
+  const isEffectiveAdmin = isAdmin || currentUser?.email === 'ayaan@habibi.com' || (typeof window !== 'undefined' && Boolean(localStorage.getItem('moviehub_admin_session') || sessionStorage.getItem('moviehub_admin_session')));
   const navigate = useNavigate();
   const location = useLocation();
   const searchContainerRef = useRef(null);
@@ -354,16 +355,15 @@ const Navbar = () => {
               )}
             </Link>
 
-            {/* Admin Command Center Quick Button */}
-            {isAdmin && (
-              <Link to="/admin" className="navbar-admin-link" title="Admin Command Center">
-                <Shield size={18} className="gold-shield" />
-                <span className="navbar-admin-label">Admin</span>
+            {/* User Profile or Admin Account or Sign In Button */}
+            {isEffectiveAdmin ? (
+              <Link to="/admin" className="navbar-user-btn navbar-admin-account-btn" title="Admin Command Center">
+                <div className="navbar-user-fallback admin-badge-avatar">
+                  <Shield size={14} />
+                </div>
+                <span className="navbar-user-name">Ayaan (Admin)</span>
               </Link>
-            )}
-
-            {/* User Profile or Sign In Button */}
-            {isAuthenticated ? (
+            ) : isAuthenticated ? (
               <Link to="/profile" className="navbar-user-btn" title="My Profile">
                 {currentUser?.photoURL ? (
                   <img

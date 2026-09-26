@@ -16,6 +16,10 @@ import {
   clearUserWatchlist
 } from '../utils/adminService';
 import { initVisitorTracker, getVisitorStats } from '../utils/visitorTracker';
+import { 
+  subscribeToVisitorStatsFromFirestore,
+  subscribeToMaintenanceFromFirestore 
+} from '../utils/firestoreService';
 import { useAuth } from './AuthContext';
 
 const AdminContext = createContext();
@@ -41,6 +45,28 @@ export const AdminProvider = ({ children }) => {
     const stats = initVisitorTracker();
     setVisitorStats(stats);
     setUsersData(getAllUsersWithWatchlists());
+
+    // Subscribe to real-time Firestore visitor stats
+    const unsubscribeVisitors = subscribeToVisitorStatsFromFirestore((firestoreStats) => {
+      // Merge Firestore data with local (prefer Firestore counts as source of truth)
+      setVisitorStats((prev) => ({
+        ...prev,
+        ...firestoreStats
+      }));
+    });
+
+    // Subscribe to real-time Firestore maintenance config
+    const unsubscribeMaintenance = subscribeToMaintenanceFromFirestore((firestoreConfig) => {
+      setMaintenanceConfig((prev) => ({
+        ...prev,
+        ...firestoreConfig
+      }));
+    });
+
+    return () => {
+      unsubscribeVisitors();
+      unsubscribeMaintenance();
+    };
   }, []);
 
   // Sync user activity when logged in
@@ -97,13 +123,21 @@ export const AdminProvider = ({ children }) => {
     setAdminSession(false);
   };
 
-  const updateMaintenance = (active, poem, eta, title) => {
-    const updated = saveMaintenanceConfig({
-      isActive: Boolean(active),
-      ...(poem !== undefined && { poem }),
-      ...(eta !== undefined && { eta }),
-      ...(title !== undefined && { title })
-    });
+  const updateMaintenance = (activeOrConfig, poem, eta, title, message, pastConditions) => {
+    let configToSave = {};
+    if (typeof activeOrConfig === 'object' && activeOrConfig !== null) {
+      configToSave = activeOrConfig;
+    } else {
+      configToSave = {
+        isActive: Boolean(activeOrConfig),
+        ...(poem !== undefined && { poem }),
+        ...(eta !== undefined && { eta }),
+        ...(title !== undefined && { title }),
+        ...(message !== undefined && { message }),
+        ...(pastConditions !== undefined && { pastConditions })
+      };
+    }
+    const updated = saveMaintenanceConfig(configToSave);
     setMaintenanceConfig(updated);
     return updated;
   };

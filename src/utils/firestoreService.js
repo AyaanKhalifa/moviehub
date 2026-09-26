@@ -173,10 +173,10 @@ export const recordVisitorToFirestore = async (isNewVisitor = false) => {
 
     if (!snap.exists()) {
       await setDoc(metricsRef, {
-        totalVisits: 14821,
-        uniqueVisitors: 6431,
-        todayVisits: 385,
-        totalPageViews: 42151,
+        totalVisits: 1,
+        uniqueVisitors: 1,
+        todayVisits: 1,
+        totalPageViews: 1,
         lastUpdated: serverTimestamp()
       });
     } else {

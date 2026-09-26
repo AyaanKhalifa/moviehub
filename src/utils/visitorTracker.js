@@ -1,8 +1,8 @@
-// Visitor Tracker Service - Tracks total site visitors, unique visits, and page views (with or without login)
-import { recordVisitorToFirestore } from './firestoreService';
+// Real-Time Visitor & Traffic Tracking Service
+import { recordVisitorToFirestore, subscribeToVisitorStatsFromFirestore } from './firestoreService';
 
-const VISITOR_STORAGE_KEY = 'moviehub_visitor_metrics';
-const SESSION_STORAGE_KEY = 'moviehub_session_recorded';
+const VISITOR_STORAGE_KEY = 'moviehub_real_visitor_metrics';
+const SESSION_STORAGE_KEY = 'moviehub_active_session_id';
 
 export const initVisitorTracker = () => {
   try {
@@ -10,46 +10,44 @@ export const initVisitorTracker = () => {
     const todayStr = new Date().toISOString().split('T')[0];
 
     let metrics = raw ? JSON.parse(raw) : {
-      totalVisits: 14820,
-      uniqueVisitors: 6430,
-      todayVisits: 384,
-      totalPageViews: 42150,
+      totalVisits: 1,
+      uniqueVisitors: 1,
+      todayVisits: 1,
+      totalPageViews: 1,
       lastDate: todayStr
     };
 
-    // Reset todayVisits if new day
+    // Reset todayVisits if it's a new date
     if (metrics.lastDate !== todayStr) {
       metrics.todayVisits = 1;
       metrics.lastDate = todayStr;
     }
 
     let isNewVisitor = false;
-    // Check if new session
     const isSessionRecorded = sessionStorage.getItem(SESSION_STORAGE_KEY);
     if (!isSessionRecorded) {
-      metrics.totalVisits += 1;
-      metrics.todayVisits += 1;
-      metrics.uniqueVisitors += 1;
-      sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
+      metrics.totalVisits = (metrics.totalVisits || 0) + 1;
+      metrics.todayVisits = (metrics.todayVisits || 0) + 1;
+      metrics.uniqueVisitors = (metrics.uniqueVisitors || 0) + 1;
+      sessionStorage.setItem(SESSION_STORAGE_KEY, `session-${Date.now()}`);
       isNewVisitor = true;
     }
 
-    // Always increment page view
-    metrics.totalPageViews += 1;
+    metrics.totalPageViews = (metrics.totalPageViews || 0) + 1;
 
     localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify(metrics));
 
-    // Async record to Cloud Firestore database
+    // Record to Firebase Firestore
     recordVisitorToFirestore(isNewVisitor);
 
     return metrics;
   } catch (err) {
     console.warn('Visitor tracker fallback:', err);
     return {
-      totalVisits: 14820,
-      uniqueVisitors: 6430,
-      todayVisits: 384,
-      totalPageViews: 42150
+      totalVisits: 1,
+      uniqueVisitors: 1,
+      todayVisits: 1,
+      totalPageViews: 1
     };
   }
 };
@@ -60,10 +58,10 @@ export const getVisitorStats = () => {
     if (raw) return JSON.parse(raw);
   } catch {}
   return {
-    totalVisits: 14820,
-    uniqueVisitors: 6430,
-    todayVisits: 384,
-    totalPageViews: 42150
+    totalVisits: 1,
+    uniqueVisitors: 1,
+    todayVisits: 1,
+    totalPageViews: 1
   };
 };
 
@@ -73,6 +71,7 @@ export const recordPageView = () => {
     stats.totalPageViews = (stats.totalPageViews || 0) + 1;
     localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify(stats));
     window.dispatchEvent(new Event('visitor_update'));
+    recordVisitorToFirestore(false);
     return stats;
   } catch {
     return getVisitorStats();

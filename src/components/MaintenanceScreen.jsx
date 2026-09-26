@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Film, Sparkles, Shield, Clock, Lock, ArrowRight, X } from 'lucide-react';
+import { Film, Sparkles, Shield, Clock, Lock, ArrowRight, X, History, CheckCircle, RefreshCw } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import { useNavigate } from 'react-router-dom';
 import './MaintenanceScreen.css';
@@ -58,6 +58,14 @@ const MaintenanceScreen = () => {
             {maintenanceConfig.title || 'Upgrading the Cinema Experience'}
           </h1>
 
+          {/* Current Upgrade Announcement Message */}
+          {maintenanceConfig.message && (
+            <div className="maintenance-current-notice">
+              <RefreshCw size={16} className="notice-icon-spin" />
+              <span>{maintenanceConfig.message}</span>
+            </div>
+          )}
+
           {/* The Beautiful Poem */}
           <div className="maintenance-poem-box">
             <div className="poem-quote-mark top">&ldquo;</div>
@@ -69,6 +77,28 @@ const MaintenanceScreen = () => {
               ))}
             </div>
             <div className="poem-quote-mark bottom">&rdquo;</div>
+          </div>
+
+          {/* Past Conditions & System Upgrade History */}
+          <div className="maintenance-past-conditions-card">
+            <div className="past-conditions-header">
+              <History size={16} className="history-gold-icon" />
+              <h4>System Progress & Past Conditions</h4>
+            </div>
+            <div className="conditions-list">
+              <div className="condition-item completed">
+                <CheckCircle size={14} className="check-green" />
+                <div className="condition-text">
+                  <strong>Previous Release (V1.3 - V1.4):</strong> Full Mobile PWA App Support, Firebase Auth & Watchlists completed.
+                </div>
+              </div>
+              <div className="condition-item in-progress">
+                <span className="pulse-bullet" />
+                <div className="condition-text">
+                  <strong>Current Upgrade (V1.5):</strong> {maintenanceConfig.pastConditions || 'Real-time database sync, live visitor analytics, and enhanced high-speed movie discovery engine.'}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ETA / Info Footer */}
